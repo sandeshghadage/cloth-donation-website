@@ -8,7 +8,7 @@ import { donationData } from "./page";
 //   volume: number;
 // }
 
-interface Step2Props {
+interface Step3Props {
   setCurrStep: React.Dispatch<React.SetStateAction<number>>;
   setStep3Data: React.Dispatch<React.SetStateAction<donationData>>;
   data: donationData;
@@ -202,6 +202,7 @@ const Step3: React.FC<Step3Props> = ({
             alignSelf: "center",
             padding: "12px 20px",
           }}
+          onClick={() => setCurrStep(4)}
         >
           PROCEED
         </button>

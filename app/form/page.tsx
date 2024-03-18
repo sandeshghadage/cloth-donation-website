@@ -99,10 +99,10 @@ const Form = () => {
       name: "",
       email: "",
       mobileNumber: "",
+      flat: "",
       address: "",
       city: "",
       pincode: "",
-      flat: "",
     },
     note: "",
   });
@@ -172,7 +172,7 @@ const Form = () => {
       note: value,
     }));
   };
-
+  console.log(175, currStep);
   return (
     <div className="border p-6 flex justify-center ">
       <div
@@ -198,6 +198,13 @@ const Form = () => {
             setCurrStep={setCurrStep}
             setStep3Data={setStep3Data}
             step3Data={step3Data}
+          />
+        )}
+        {currStep === 4 && (
+          <Step4
+            setCurrStep={setCurrStep}
+            setStep4Data={setStep4Data}
+            step4Data={step4Data}
           />
         )}
       </div>
