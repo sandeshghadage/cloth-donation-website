@@ -1,47 +1,40 @@
-import React, { useState } from "react";
-import { donationData } from "./page";
+import React, { useState, ChangeEvent } from "react";
 
 interface Option {
   isChecked: boolean;
 }
 
 interface TimeSlot {
-  time1: string;
-  time2: string;
-  time3: string;
+  THURSDAY: string[];
+  FRIDAY: string[];
+  SATURDAY: string[];
 }
 
-interface Step4Props {
-  setCurrStep: React.Dispatch<React.SetStateAction<number>>;
-  setStep3Data: React.Dispatch<React.SetStateAction<donationData>>;
-  data: donationData;
-  step3Data: donationData;
-}
-
-const Step4: React.FC<Step4Props> = ({
-  setCurrStep,
-  setStep3Data,
-  step3Data,
-}) => {
+const Step4: React.FC = () => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [isSelectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(
-    null
-  );
+  const [isSelectedTimeSlot, setSelectedTimeSlot] = useState<{
+    day: string;
+    time: string;
+  } | null>(null);
+  const [comment, setComment] = useState<string>("");
+
   const optionData: TimeSlot[] = [
     {
-      time1: "10:00 AM - 12:00 PM",
-      time2: " 12:00 PM - 02:00 PM",
-      time3: "2:00 PM - 04:00 PM",
-    },
-    {
-      time1: "10:00 AM - 12:00 PM",
-      time2: " 12:00 PM - 02:00 PM",
-      time3: "2:00 PM - 04:00 PM",
-    },
-    {
-      time1: "10:00 AM - 12:00 PM",
-      time2: " 12:00 PM - 02:00 PM",
-      time3: "2:00 PM - 04:00 PM",
+      THURSDAY: [
+        "10:00 AM - 12:00 PM",
+        "12:00 PM - 02:00 PM",
+        "2:00 PM - 04:00 PM",
+      ],
+      FRIDAY: [
+        "10:00 AM - 12:00 PM",
+        "12:00 PM - 02:00 PM",
+        "2:00 PM - 04:00 PM",
+      ],
+      SATURDAY: [
+        "10:00 AM - 12:00 PM",
+        "12:00 PM - 02:00 PM",
+        "2:00 PM - 04:00 PM",
+      ],
     },
   ];
 
@@ -60,12 +53,42 @@ const Step4: React.FC<Step4Props> = ({
     },
   ];
 
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(event.target.value);
+  };
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-  const handleData = (item: TimeSlot) => {
-    setSelectedTimeSlot(item);
+  const handleData = (day: string, timeSlot: string) => {
+    console.log("Selected time slot:", day, timeSlot);
+    setSelectedTimeSlot({ day, time: timeSlot });
   };
+
+  console.log("date", isSelectedTimeSlot);
+  const onSubmit = async (data: TimeSlot) => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const body = await res.json();
+
+      if (res.ok) {
+        alert(`${body.message} 🚀`);
+      }
+
+      if (res.status === 400) {
+        alert(`${body.message} 😢`);
+      }
+    } catch (err) {
+      console.log("Something went wrong: ", err);
+    }
+  };
+  console.log(comment);
 
   return (
     <div
@@ -86,43 +109,31 @@ const Step4: React.FC<Step4Props> = ({
               {optionData.map((item) => {
                 return (
                   <>
-                    <span className="text-sm">THU, 14TH MAR:</span>
-                    <div className="flex flex-row justify-between items-center gap-2 max-xl:flex-wrap max-xl:justify-around">
-                      <button
-                        onClick={() => handleData(item)}
-                        className={
-                          isSelectedTimeSlot?.time1 === item.time1
-                            ? "border-2  w-48 h-10 rounded-xl bg-orange-500 text-white"
-                            : "border-2 border-gray-500 w-48 h-10 rounded-xl max-xl w-45"
-                        }
-                      >
-                        {item.time1}
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleData(item);
-                        }}
-                        className={
-                          isSelectedTimeSlot?.time2 === item.time2
-                            ? "border-2  w-48 h-10 rounded-xl bg-orange-500 text-white"
-                            : "border-2 border-gray-500 w-48 h-10 rounded-xl max-xl w-45"
-                        }
-                      >
-                        {item.time2}
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleData(item);
-                        }}
-                        className={
-                          isSelectedTimeSlot?.time3 === item.time3
-                            ? "border-2  w-48 h-10 rounded-xl bg-orange-500 text-white"
-                            : "border-2 border-gray-500 w-48 h-10 rounded-xl max-xl w-45"
-                        }
-                      >
-                        {item.time3}
-                      </button>
-                    </div>
+                    {Object.entries(item).map(([day, timeSlots]) => {
+                      return (
+                        <>
+                          <span className="text-sm">{day}</span>
+                          <div className="flex flex-row justify-between items-center gap-2 max-xl:flex-wrap max-xl:justify-around">
+                            {timeSlots.map(
+                              (timeSlot: string, timeIndex: number) => (
+                                <button
+                                  key={timeIndex}
+                                  onClick={() => handleData(day, timeSlot)}
+                                  className={
+                                    isSelectedTimeSlot?.day === day &&
+                                    isSelectedTimeSlot?.time === timeSlot
+                                      ? "border-2 w-48 h-10 rounded-xl bg-orange-500 text-white"
+                                      : "border-2 border-gray-500 w-48 h-10 rounded-xl max-xl w-45"
+                                  }
+                                >
+                                  {timeSlot}
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </>
+                      );
+                    })}
                   </>
                 );
               })}
@@ -134,12 +145,15 @@ const Step4: React.FC<Step4Props> = ({
               * We'll do our best to pass along your instructions to our Pickup
               Partner. Compliance isn't guaranteed.
             </span>
-            <div className=" border-orange-500">
+            <div className=" border-orange-500 focus:border-blue-500 focus:outline-none">
               <textarea
-                className=" border-orange-500 p-2 w-full outline-orange-500 outline-offset-1 outline-width-0"
+                className=" border-orange-500 focus:border-blue-500 focus:outline-none p-2 w-full outline-orange-500 outline-offset-1 outline-width-0"
                 placeholder="Enter your comments here..."
                 rows={4}
                 cols={50}
+                value={comment}
+                onChange={handleChange}
+                // style={{ borderColor: 'orange',outline:"none",outlineColor:"orange",outlineOffset:0 }}
               ></textarea>
             </div>
           </div>
