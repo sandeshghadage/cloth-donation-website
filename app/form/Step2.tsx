@@ -1,6 +1,18 @@
 import React from "react";
+import { donationData } from "./page";
 
-export default function Step2() {
+interface Step2Props {
+  setCurrStep: React.Dispatch<React.SetStateAction<number>>;
+  setStep2Data: React.Dispatch<React.SetStateAction<donationData>>;
+  data: donationData;
+  step2Data: donationData;
+}
+
+const Step2: React.FC<Step2Props> = ({
+  setCurrStep,
+  setStep2Data,
+  step2Data,
+}) => {
   const optionData = [
     {
       name: "Light Pickup",
@@ -11,10 +23,21 @@ export default function Step2() {
       cost: "FREE",
     },
   ];
+
+  const handleLocationselect = (value: step2Data) => {
+    setStep2Data((prevData) => ({
+      ...prevData,
+      vehicalType: value.name,
+    }));
+  };
+
+  const handleProceed = () => {
+    setCurrStep(3);
+  };
   return (
     <div
       className="flex justify-center items-center flex-col gap-4"
-      style={{ width: "40%" }}
+      style={{ width: "40%", height: "80vh" }}
     >
       <h3 style={{ fontSize: "24px" }}>HOW DO YOU WISH TO DONATE?</h3>
       <h6 style={{ width: "70%", textAlign: "center" }}>
@@ -47,9 +70,18 @@ export default function Step2() {
                 justifyContent: "space-between",
               }}
               className="p-4"
+              onClick={() => handleLocationselect(item)}
             >
-              <div style={{ fontSize: "15px", fontWeight: "600" }}>
-                {item.name}
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="radio1"
+                  name="radiogroup"
+                  className="w-3 h-3 border-2 border-orange-500 rounded-full focus:ring-orange-500"
+                />
+                <div style={{ fontSize: "15px", fontWeight: "600" }}>
+                  {item.name}
+                </div>
               </div>
               <div
                 style={{
@@ -75,9 +107,11 @@ export default function Step2() {
           alignSelf: "center",
           padding: "12px 20px",
         }}
+        onClick={handleProceed}
       >
         PROCEED
       </button>
     </div>
   );
-}
+};
+export default Step2;

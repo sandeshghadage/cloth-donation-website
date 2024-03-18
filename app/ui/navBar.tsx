@@ -75,12 +75,12 @@ export default function FlowByteNavBar() {
         >
           Volunteer
         </Link>
-        <Link
+        {/* <Link
           href="/form"
           className={`link ${pathname === "/form" ? "text-blue-400" : ""} `}
         >
           form
-        </Link>
+        </Link> */}
 
         <Link
           href="/faqs"
