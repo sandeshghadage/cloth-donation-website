@@ -8,6 +8,11 @@ import { donationData } from "./page";
 //   volume: number;
 // }
 
+interface Step3Data {
+  cartItems: { volume: number; qty: number }[];
+  // Add other properties if necessary
+}
+
 interface Step3Props {
   setCurrStep: React.Dispatch<React.SetStateAction<number>>;
   setStep3Data: React.Dispatch<React.SetStateAction<donationData>>;
@@ -41,14 +46,18 @@ const Step3: React.FC<Step3Props> = ({
 
   function calcVolume() {
     let totalVolume = 0;
-    step3Data.cartItems.forEach((ele) => {
-      totalVolume += ele.volume * ele.qty;
-    });
-    setFinalVolume(totalVolume);
+    if (step3Data && step3Data.cartItems) {
+      step3Data.cartItems.forEach((ele) => {
+        totalVolume += ele.volume * ele.qty;
+      });
+      setFinalVolume(totalVolume);
+    }
   }
+
   useEffect(() => {
     calcVolume();
-  }, [optionData]);
+  }, [step3Data]);
+
   return (
     <div
       className="flex justify-center items-center flex-col gap-4 p-4"

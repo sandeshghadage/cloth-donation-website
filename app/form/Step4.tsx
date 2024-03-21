@@ -307,14 +307,18 @@ const Step4: React.FC<Step4Props> = ({
             <h1 className=" flex items-center py-2 px-6 text-xl">
               Donated Items
             </h1>
-            {step3Data.cartItems.map((item) => {
-              return (
-                <div className="border-t-2 flex flex-row justify-between items-center py-2 px-6">
-                  <span>{item.name}</span>
-                  <span>{item.qty}</span>
-                </div>
-              );
-            })}
+            {step3Data && step3Data.cartItems && (
+              <>
+                {step3Data?.cartItems.map((item) => {
+                  return (
+                    <div className="border-t-2 flex flex-row justify-between items-center py-2 px-6">
+                      <span>{item.name}</span>
+                      <span>{item.qty}</span>
+                    </div>
+                  );
+                })}
+              </>
+            )}
 
             <div className="border-t-2 flex flex-col justify-between items-left py-2 px-6">
               <div className="flex flex-row justify-between items-center">
