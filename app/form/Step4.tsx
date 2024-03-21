@@ -42,7 +42,7 @@ const Step4: React.FC<Step4Props> = ({
     ...step3Data,
     ...step4Data,
   };
-  console.log(45, finalData);
+
   const optionData: TimeSlot[] = [
     {
       THURSDAY: [

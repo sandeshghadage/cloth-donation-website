@@ -24,7 +24,7 @@ const Step2: React.FC<Step2Props> = ({
     },
   ];
 
-  const handleLocationselect = (value: step2Data) => {
+  const handleLocationselect = (value: any) => {
     setStep2Data((prevData) => ({
       ...prevData,
       vehicalType: value.name,
