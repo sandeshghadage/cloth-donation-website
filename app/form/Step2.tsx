@@ -36,11 +36,13 @@ const Step2: React.FC<Step2Props> = ({
   };
   return (
     <div
-      className="flex justify-center items-center flex-col gap-4"
-      style={{ width: "40%", height: "80vh" }}
+      className="flex justify-center items-center flex-col gap-4 p-4 my-5 my-md-0"
+      // style={{ height: "80vh" }}
     >
-      <h3 style={{ fontSize: "24px" }}>HOW DO YOU WISH TO DONATE?</h3>
-      <h6 style={{ width: "70%", textAlign: "center" }}>
+      <h3 className="text-center" style={{ fontSize: "24px" }}>
+        HOW DO YOU WISH TO DONATE?
+      </h3>
+      <h6 className="text-center">
         Options shown as per your location: Pune, Maharashtra, India
       </h6>
       <div
@@ -56,7 +58,7 @@ const Step2: React.FC<Step2Props> = ({
           className="text-center uppercase mb-4"
           style={{ fontSize: "16px", fontWeight: "600" }}
         >
-          PICKUP FROM DOORSTEP{" "}
+          PICKUP FROM DOORSTEP
         </div>
         <div className="flex flex-col gap-3">
           {optionData.map((item, index) => (
@@ -72,7 +74,7 @@ const Step2: React.FC<Step2Props> = ({
               className="p-4"
               onClick={() => handleLocationselect(item)}
             >
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                 <input
                   type="radio"
                   id="radio1"

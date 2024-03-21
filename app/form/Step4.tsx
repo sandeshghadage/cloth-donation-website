@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
+import { donationData } from "./page";
 
 interface Option {
   isChecked: boolean;
@@ -10,7 +11,24 @@ interface TimeSlot {
   SATURDAY: string[];
 }
 
-const Step4: React.FC = () => {
+interface Step4Props {
+  setCurrStep: React.Dispatch<React.SetStateAction<number>>;
+  setStep4Data: React.Dispatch<React.SetStateAction<donationData>>;
+  data: donationData;
+  step4Data: donationData;
+  step3Data: donationData;
+  step2Data: donationData;
+  step1Data: donationData;
+}
+
+const Step4: React.FC<Step4Props> = ({
+  setCurrStep,
+  setStep4Data,
+  step4Data,
+  step3Data,
+  step2Data,
+  step1Data,
+}) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isSelectedTimeSlot, setSelectedTimeSlot] = useState<{
     day: string;
@@ -18,6 +36,13 @@ const Step4: React.FC = () => {
   } | null>(null);
   const [comment, setComment] = useState<string>("");
 
+  const finalData = {
+    ...step1Data,
+    ...step2Data,
+    ...step3Data,
+    ...step4Data,
+  };
+  console.log(45, finalData);
   const optionData: TimeSlot[] = [
     {
       THURSDAY: [
@@ -37,7 +62,7 @@ const Step4: React.FC = () => {
       ],
     },
   ];
-
+  console.log(54, step4Data);
   const optionData1 = [
     {
       name: "cloths",
@@ -54,25 +79,30 @@ const Step4: React.FC = () => {
   ];
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(event.target.value);
+    setStep4Data((prevData) => ({
+      ...prevData,
+      note: event.target.value,
+    }));
   };
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
   const handleData = (day: string, timeSlot: string) => {
-    console.log("Selected time slot:", day, timeSlot);
+    // console.log("Selected time slot:", day, timeSlot);
     setSelectedTimeSlot({ day, time: timeSlot });
   };
 
-  console.log("date", isSelectedTimeSlot);
-  const onSubmit = async (data: TimeSlot) => {
+  // console.log("date", isSelectedTimeSlot);
+  const onSubmit = async () => {
+    // console.log(97, finalData);
+    // console.log("first");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/sendEmail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(finalData),
       });
 
       const body = await res.json();
@@ -88,7 +118,17 @@ const Step4: React.FC = () => {
       console.log("Something went wrong: ", err);
     }
   };
-  console.log(comment);
+  // console.log(comment);
+  const handleStep4InputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setStep4Data((prevData) => ({
+      ...prevData,
+      userDetails: {
+        ...prevData.userDetails,
+        [name]: value,
+      },
+    }));
+  };
 
   return (
     <div
@@ -118,7 +158,16 @@ const Step4: React.FC = () => {
                               (timeSlot: string, timeIndex: number) => (
                                 <button
                                   key={timeIndex}
-                                  onClick={() => handleData(day, timeSlot)}
+                                  onClick={() => {
+                                    handleData(day, timeSlot);
+                                    setStep4Data((prevData) => ({
+                                      ...prevData,
+                                      time: {
+                                        day: day,
+                                        timeSlot: timeSlot,
+                                      },
+                                    }));
+                                  }}
                                   className={
                                     isSelectedTimeSlot?.day === day &&
                                     isSelectedTimeSlot?.time === timeSlot
@@ -151,14 +200,14 @@ const Step4: React.FC = () => {
                 placeholder="Enter your comments here..."
                 rows={4}
                 cols={50}
-                value={comment}
+                value={step4Data.note}
                 onChange={handleChange}
                 // style={{ borderColor: 'orange',outline:"none",outlineColor:"orange",outlineOffset:0 }}
               ></textarea>
             </div>
           </div>
         </div>
-        <div className="w-6/12  flex flex-col justify-center items-end gap-8 max-xl:w-full max-xl:flex-row max-lg:flex-col max-lg:items-center ">
+        <div className="w-6/12  flex flex-col justify-center items-end gap-8 max-xl:w-full max-xl:flex-row max-lg:flex-col max-lg:items-center">
           <div className="w-8/12  flex flex-col justify-center items-center gap-2  rounded-xl shadow-lg shadow-orange-500/50 max-2xl:w-10/12 ">
             <h2 className="py-4 px-6 text-2xl font-normal antialiased ">
               Donar Details
@@ -168,38 +217,59 @@ const Step4: React.FC = () => {
                 <input
                   className="w-full h-full px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Name.."
+                  name="name"
+                  value={step4Data.userDetails.name}
+                  onChange={handleStep4InputChange}
                 />
               </div>
               <div className="w-10/12 h-10 border-2 border-orange-500 rounded-xl">
                 <input
                   className="w-full h-full px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Email"
+                  name="email"
+                  value={step4Data.userDetails.email}
+                  onChange={handleStep4InputChange}
                 />
               </div>
               <div className="w-10/12 h-10 border-2 border-orange-500 rounded-xl">
                 <input
                   className="w-full h-full px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Mobile No.."
+                  name="mobileNumber"
+                  value={step4Data.userDetails.mobileNumber}
+                  onChange={handleStep4InputChange}
                 />
               </div>
               <div className="w-10/12 h-10  flex flex-row justify-center gap-4 rounded-xl">
                 <input
                   className="w-5/12 h-full border-2 border-orange-500 px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Flat/Door"
+                  name="flat"
+                  value={step4Data.userDetails.flat}
+                  onChange={handleStep4InputChange}
                 />
                 <input
                   className="w-7/12 h-full border-2 border-orange-500 px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Full Address"
+                  name="address"
+                  value={step4Data.userDetails.address}
+                  onChange={handleStep4InputChange}
                 />
               </div>
               <div className="w-10/12 h-10 flex flex-row justify-center gap-4 rounded-xl">
                 <input
                   className="w-6/12 h-full border-2 border-orange-500 px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="City"
+                  name="city"
+                  value={step4Data.userDetails.city}
+                  onChange={handleStep4InputChange}
                 />
                 <input
                   className="w-6/12 h-full border-2 border-orange-500 px-2 rounded-xl outline-orange-500 outline-offset-1"
                   placeholder="Pincode"
+                  name="pincode"
+                  value={step4Data.userDetails.pincode}
+                  onChange={handleStep4InputChange}
                 />
               </div>
               <div className="w-9/12 h-10 mb-1 ">
@@ -237,7 +307,7 @@ const Step4: React.FC = () => {
             <h1 className=" flex items-center py-2 px-6 text-xl">
               Donated Items
             </h1>
-            {optionData1.map((item) => {
+            {step3Data.cartItems.map((item) => {
               return (
                 <div className="border-t-2 flex flex-row justify-between items-center py-2 px-6">
                   <span>{item.name}</span>
@@ -263,7 +333,10 @@ const Step4: React.FC = () => {
         <button className=" px-4 py-2 bg-gray-400 rounded text-white">
           Back
         </button>
-        <button className=" px-4 py-2 bg-orange-500 rounded text-white">
+        <button
+          onClick={onSubmit}
+          className=" px-4 py-2 bg-orange-500 rounded text-white"
+        >
           Proceed
         </button>
       </div>

@@ -91,6 +91,7 @@ const Step3: React.FC<Step3Props> = ({
                         border: "2px solid red",
                         height: "30px",
                         width: "100px",
+                        cursor: "pointer",
                       }}
                       onClick={() => {
                         const temp = { ...step3Data };
@@ -107,6 +108,7 @@ const Step3: React.FC<Step3Props> = ({
                         border: "2px solid red",
                         height: "30px",
                         width: "100px",
+                        cursor: "pointer",
                       }}
                     >
                       <div

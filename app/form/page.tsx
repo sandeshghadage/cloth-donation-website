@@ -44,6 +44,7 @@ interface Step4FormData {
     flat: string;
   };
   note: string;
+  time: object;
 }
 
 interface MultiStepFormProps {
@@ -54,7 +55,7 @@ export interface donationData {
   location: string;
   vehicalType: string;
   cartItems: [];
-  time: string;
+  time: object;
   userDetails: {
     name: string;
     email: string;
@@ -105,6 +106,7 @@ const Form = () => {
       pincode: "",
     },
     note: "",
+    time: {},
   });
 
   const handleStep1Submit = (e: React.FormEvent) => {
@@ -129,7 +131,7 @@ const Form = () => {
     };
     // onSubmit(formData);
   };
-  console.log(114, step3Data);
+  console.log(114, step4Data);
   const nextStep = () => {
     setCurrStep((prevStep) => prevStep + 1);
   };
@@ -205,6 +207,9 @@ const Form = () => {
             setCurrStep={setCurrStep}
             setStep4Data={setStep4Data}
             step4Data={step4Data}
+            step3Data={step3Data}
+            step2Data={step2Data}
+            step1Data={step1Data}
           />
         )}
       </div>

@@ -28,11 +28,13 @@ const Step1: React.FC<Step1Props> = ({
 
   return (
     <div
-      className="flex justify-center items-center flex-col gap-4"
-      style={{ width: "40%", height: "80vh" }}
+      className="flex justify-center items-center flex-col gap-4 p-3"
+      style={{ height: "80vh" }}
     >
-      <h3 style={{ fontSize: "24px" }}>HELP US WITH YOUR EXACT LOCATION</h3>
-      <h6 style={{ width: "70%", textAlign: "center" }}>
+      <h3 className="text-center" style={{ fontSize: "24px" }}>
+        HELP US WITH YOUR EXACT LOCATION
+      </h3>
+      <h6 className="text-center">
         This allows us to check if your area is within our coverage
       </h6>
       <div className="flex justify-center" style={{ width: "100%" }}>
